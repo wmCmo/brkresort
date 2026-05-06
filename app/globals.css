@@ -12,6 +12,7 @@
   --color-border: var(--border);
   --color-second: var(--second);
   --color-muted: var(--muted);
+  --color-accent: var(--accent);
   --color-extreme: var(--extreme);
 }
 
@@ -21,6 +22,11 @@
   }
 }
 
+button,
+[role='button'] {
+  cursor: pointer;
+}
+
 @layer base {
   :root {
     --background: oklch(1 0 0);
@@ -28,8 +34,8 @@
     --border: oklch(0.97 0 0);
     --second: oklch(0.922 0 0);
     --muted: oklch(0.708 0 0);
+    --accent: oklch(0.371 0 0);
     --extreme: oklch(0.205 0 0);
-
   }
 
   .dark {
@@ -38,6 +44,7 @@
     --border: oklch(0.371 0 0);
     --second: oklch(0.269 0 0);
     --muted: oklch(0.556 0 0);
+    --accent: oklch(0.87 0 0);
     --extreme: oklch(1 0 0);
   }
 }

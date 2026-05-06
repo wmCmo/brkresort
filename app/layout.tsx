@@ -4,6 +4,7 @@ import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import MobileNav from "@/components/MobileNav";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -44,6 +45,7 @@ export default function RootLayout({
           <body className="min-h-full flex flex-col">
             {children}
             {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
+            <MobileNav />
           </body>
         </QueryProvider>
       </ThemeProvider>
