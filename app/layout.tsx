@@ -2,6 +2,8 @@ import type { Metadata, Viewport } from "next";
 import { Kanit, Montserrat } from "next/font/google";
 import "./globals.css";
 import ThemeProvider from "@/providers/ThemeProvider";
+import QueryProvider from "@/providers/QueryProvider";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -24,6 +26,7 @@ const DESC = "Cozy Wooden Cottage - Stunning Riverside View in Kanchanaburi";
 export const metadata: Metadata = {
   title: { default: TITLE, template: `%s | ${TITLE}` },
   description: DESC,
+  icons: "/ui/logo.svg"
 };
 
 export default function RootLayout({
@@ -37,7 +40,12 @@ export default function RootLayout({
       className={`${montserrat.variable} ${kanit.variable} h-full antialiased font-sans bg-background`}
     >
       <ThemeProvider>
-        <body className="min-h-full flex flex-col">{children}</body>
+        <QueryProvider>
+          <body className="min-h-full flex flex-col">
+            {children}
+            {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
+          </body>
+        </QueryProvider>
       </ThemeProvider>
     </html>
   );
