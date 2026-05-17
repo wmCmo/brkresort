@@ -44,7 +44,7 @@ export default function RootLayout({
         <QueryProvider>
           <body className="min-h-full flex flex-col">
             {children}
-            {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
+            {/* {process.env.NODE_ENV === "development" && <ReactQueryDevtools />} */}
             <MobileNav />
           </body>
         </QueryProvider>
