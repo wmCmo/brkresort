@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 export default function MobileNav() {
     const path = usePathname();
     return (
-        <div className="flex text-muted py-2 bg-foreground fixed bottom-0 left-0 justify-around items-center w-screen">
+        <div className="flex text-muted bg-foreground fixed bottom-0 left-0 justify-around items-center w-screen">
             <IconContext.Provider value={{
                 weight: "fill",
                 size: 32,
@@ -20,7 +20,7 @@ export default function MobileNav() {
                         <BowlFoodIcon className={`hover:text-accent animate-out ${path === "/menu" && 'text-extreme'}`} />
                     </Link>
                 </div>
-                <Link href={'/menu/cart'} className="mx-4 bg-lime-600 p-4 rounded-lg -translate-y-4 hover:-translate-y-6 animate-out">
+                <Link href={'/menu/cart'} className={`mx-4 bg-lime-600 p-4 rounded-lg ${path === "/menu/cart" && '-translate-y-4 hover:-translate-y-2'} animate-out`}>
                     <BasketIcon className="text-white" />
                 </Link>
                 <div className="flex w-full justify-around">

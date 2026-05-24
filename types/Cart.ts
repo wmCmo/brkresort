@@ -1,8 +1,5 @@
+export const CART_KEY = 'cart';
+
 export default interface CartType {
-    [key: string]: {
-        id: string;
-        name: string;
-        quantity: number;
-        price: number;
-    };
+    [id: string]: number;
 }

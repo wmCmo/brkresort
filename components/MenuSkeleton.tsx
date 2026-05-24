@@ -1,7 +1,7 @@
 function DefaultMenu() {
     return (
         <div className="flex gap-2 items-center">
-            <div className="w-20 h-20 bg-border animate-pulse rounded-lg" />
+            <div className="w-24 h-24 bg-border animate-pulse rounded-lg" />
             <div className="space-y-2">
                 <div className="w-20 h-4 animate-pulse bg-second rounded-full" />
                 <div className="w-12 h-4 animate-pulse bg-second rounded-full" />

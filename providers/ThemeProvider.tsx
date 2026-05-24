@@ -1,6 +1,6 @@
 'use client';
 
-import { createContext, ReactNode, useEffect, useState } from "react";
+import { createContext, ReactNode, useEffect, useRef, useState } from "react";
 import { z } from 'zod';
 
 const ThemeSchema = z.enum(['light', 'dark', 'system']);
@@ -25,11 +25,21 @@ const storageKey = 'app-theme';
 export default function ThemeProvider({ children }: { children: ReactNode; }) {
     const [theme, setThemeState] = useState<ThemeType>(ThemeSchema.enum.system);
 
+    const initialLoad = useRef(true);
+
     useEffect(() => {
-        const raw = localStorage.getItem(storageKey);
-        const parsed = ThemeSchema.safeParse(raw);
-        const stored = parsed.success ? parsed.data : 'system';
-        setThemeState(stored);
+        if (!initialLoad.current) return;
+
+        try {
+            const raw = localStorage.getItem(storageKey);
+            const parsed = ThemeSchema.safeParse(raw);
+            const stored = parsed.success ? parsed.data : 'system';
+            setThemeState(stored);
+        } catch {
+            //
+        } finally {
+            initialLoad.current = false;
+        }
     }, []);
 
     useEffect(() => {

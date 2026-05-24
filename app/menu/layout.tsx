@@ -1,5 +1,3 @@
-import MobileNav from '@/components/MobileNav';
-import Nav from '@/components/Nav';
 import { Metadata } from 'next';
 import { ReactNode } from 'react';
 
@@ -29,9 +27,9 @@ export const metadata: Metadata = {
     }
 };
 
-export default function Layout({ children }: { children: ReactNode; }) {
+export default function MenuLayout({ children }: { children: ReactNode; }) {
     return (
-        <main className=''>
+        <main>
             {children}
         </main>
     );

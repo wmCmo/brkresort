@@ -1,6 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: [
+    'superhandsome-nondynastically-india.ngrok-free.dev',
+    'aware-envy-dejected.ngrok-free.dev'
+  ],
   experimental: {
     optimizePackageImports: ["@phosphor-icons/react"],
   },

@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "ngrok": "ngrok http --url=superhandsome-nondynastically-india.ngrok-free.dev 3000",
     "build": "next build",
     "start": "next start",
     "lint": "eslint"
@@ -13,7 +14,10 @@
     "@phosphor-icons/react": "^2.1.10",
     "@tanstack/react-query": "^5.100.9",
     "@tanstack/react-query-devtools": "^5.100.9",
-    "next": "16.2.4",
+    "html-to-image": "^1.11.13",
+    "next": "^16.2.6",
+    "postcss": "^8.5.10",
+    "qrcode.react": "^4.2.0",
     "react": "19.2.4",
     "react-dom": "19.2.4"
   },

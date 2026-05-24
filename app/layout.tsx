@@ -5,6 +5,7 @@ import ThemeProvider from "@/providers/ThemeProvider";
 import QueryProvider from "@/providers/QueryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import MobileNav from "@/components/MobileNav";
+import SessionProvider from "@/providers/SessionProvider";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -41,13 +42,15 @@ export default function RootLayout({
       className={`${montserrat.variable} ${kanit.variable} h-full antialiased font-sans bg-background`}
     >
       <ThemeProvider>
-        <QueryProvider>
-          <body className="min-h-full flex flex-col">
-            {children}
-            {/* {process.env.NODE_ENV === "development" && <ReactQueryDevtools />} */}
-            <MobileNav />
-          </body>
-        </QueryProvider>
+        <SessionProvider>
+          <QueryProvider>
+            <body className="min-h-full flex flex-col">
+              {children}
+              {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
+              <MobileNav />
+            </body>
+          </QueryProvider>
+        </SessionProvider>
       </ThemeProvider>
     </html>
   );
