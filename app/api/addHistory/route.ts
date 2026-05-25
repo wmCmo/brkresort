@@ -1,5 +1,5 @@
 import { notion } from "@/lib/notion";
-import { HistoryType } from "@/types/History";
+import { HistoryPayLoadType } from "@/types/History";
 import { MenuType } from "@/types/notion";
 import { HouseObj, isHouseType } from "@/types/Session";
 import { NextResponse } from "next/server";
@@ -9,7 +9,7 @@ export async function POST(req: Request) {
     const dbId = process.env.HISTORY_DB;
     if (!dbId) return NextResponse.json({ error: "Couldn't load history db ID." });
 
-    const { payload }: { payload: HistoryType; } = await req.json();
+    const { payload }: { payload: HistoryPayLoadType; } = await req.json();
     const { house } = payload;
 
     if (!isHouseType(house)) return NextResponse.json({ error: "The house is invalid." });
@@ -42,6 +42,13 @@ export async function POST(req: Request) {
                 rich_text: [{
                     text: {
                         content: payload.sig
+                    }
+                }]
+            },
+            "Cart": {
+                rich_text: [{
+                    text: {
+                        content: JSON.stringify(payload.cart)
                     }
                 }]
             }

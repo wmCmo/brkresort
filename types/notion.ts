@@ -60,3 +60,24 @@ export interface MenuType {
         };
     };
 }
+
+export type HistoryType = {
+    id: string;
+    properties: {
+        "Ordered Item": {
+            relation: RelationType[];
+        };
+        Total: {
+            number: number;
+        };
+        "Created time": {
+            created_time: string;
+        };
+        "Serve Time": {
+            date: string;
+        };
+        Cart: {
+            rich_text: RichTextType[];
+        };
+    };
+};

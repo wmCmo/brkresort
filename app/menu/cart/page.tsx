@@ -136,7 +136,8 @@ export default function CartPage() {
                 menu,
                 serveTime,
                 total,
-                sig: session.sig
+                sig: session.sig,
+                cart
             });
 
             try {

@@ -17,7 +17,7 @@ export async function POST(req: Request) {
         },
         sorts: [{
             property: "Created time",
-            direction: "descending"
+            direction: "ascending"
         }]
     });
 

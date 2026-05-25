@@ -1,6 +1,6 @@
-import { HistoryType } from "@/types/History";
+import { HistoryPayLoadType } from "@/types/History";
 
-export default async function addHistory(payload: HistoryType) {
+export default async function addHistory(payload: HistoryPayLoadType) {
     const res = await fetch('/api/addHistory', {
         method: "POST",
         headers: {

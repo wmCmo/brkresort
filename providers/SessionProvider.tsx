@@ -30,7 +30,7 @@ export default function SessionProvider({ children }: { children: ReactNode; }) 
         } catch {
             //
         }
-    }, [session]);
+    }, []);
 
 
     return (
