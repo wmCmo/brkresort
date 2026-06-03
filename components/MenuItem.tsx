@@ -1,6 +1,6 @@
 'use client';
 
-import CartType from "@/types/Cart";
+import { CartType } from "@/types/Cart";
 import { BowlSteamIcon, MinusIcon, PlusIcon } from "@phosphor-icons/react";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";

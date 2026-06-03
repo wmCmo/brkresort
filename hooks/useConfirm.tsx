@@ -5,11 +5,10 @@ const DEFAULT_STATE = { open: false, message: "", action: "" };
 export default function useConfirm() {
     const [state, setState] = useState(DEFAULT_STATE);
 
-    const resolver = useRef<(value: unknown) => void>(null);
+    const resolver = useRef<((value: unknown) => void) | null>(null);
 
     const ask = useCallback((message: string, action: "delete" | "warning" | "confirm") => {
         setState({ open: true, message, action });
-        console.log('The menu is opened');
         return new Promise(res => {
             resolver.current = res;
         });
@@ -19,7 +18,6 @@ export default function useConfirm() {
         setState(DEFAULT_STATE);
         resolver.current?.(choice);
         resolver.current = null;
-        console.log('the menu is closed');
     }, []);
 
     const modal = state.open

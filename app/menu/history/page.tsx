@@ -1,12 +1,12 @@
 'use client';
 
+import { getHistory } from "@/app/actions/history";
+import { getMenu } from "@/app/actions/menu";
 import Header from "@/components/Header";
 import MenuSkeleton from "@/components/MenuSkeleton";
 import ViewMenuButton from "@/components/ViewMenuButton";
 import useSession from "@/hooks/useSession";
-import getHistory from "@/queries/getHistory";
-import getMenu from "@/queries/getMenu";
-import CartType from "@/types/Cart";
+import { CartType } from "@/types/Cart";
 import { skipToken, useQuery } from "@tanstack/react-query";
 import { useMemo } from "react";
 
@@ -29,38 +29,37 @@ export default function HistoryPage() {
     const { session } = useSession();
 
     const { data: history, isLoading: historyLoading } = useQuery({
-        queryKey: ["history"],
+        queryKey: ["history", session?.sig],
         queryFn: session?.sig ? () => getHistory(session.sig) : skipToken
     });
 
-    const { data: menu, isLoading: menuLoading } = useQuery({
+    const { data, isLoading: menuLoading } = useQuery({
         queryKey: ["menu"],
         queryFn: getMenu
     });
 
     const groupedByDay: GroupedByDayType | null = useMemo(() => {
-        if (!history || !menu) return null;
+        if (!history?.data || !data?.menu) return null;
 
         const menuIdMap = new Map<string, { th?: string; en?: string; }>();
 
-        for (const item of menu) {
+        for (const item of data.menu) {
             menuIdMap.set(item.id, {
-                en: item.properties.Description.rich_text.at(0)?.plain_text,
-                th: item.properties.Name.title.at(0)?.plain_text
+                en: item.description,
+                th: item.name
             });
         }
 
         const map = new Map();
 
-        for (const item of history) {
-            const dateSE = new Date(item.properties["Created time"].created_time).toLocaleString("sv-SE").slice(0, 10);
-            const cartProp = item.properties.Cart.rich_text.at(0)?.plain_text;
-            if (!cartProp) continue;
+        for (const item of history.data) {
+            const dateSE = new Date(item.createdTime).toLocaleString("sv-SE").slice(0, 10);
+            if (!item.cart) continue;
 
-            const parsedCart: CartType = JSON.parse(cartProp);
+            const parsedCart: CartType = JSON.parse(item.cart);
 
             const newOrder = {
-                time: new Date(item.properties["Created time"].created_time).toLocaleTimeString("en-GB").slice(0, 5),
+                time: new Date(item.createdTime).toLocaleTimeString("en-GB").slice(0, 5),
                 carts: Object.entries(parsedCart).map(([id, count]) => {
                     const itemMap = menuIdMap.get(id);
                     return {
@@ -69,30 +68,30 @@ export default function HistoryPage() {
                         count
                     };
                 }),
-                total: item.properties.Total.number
+                total: item.total
             };
 
             if (!map.has(dateSE)) {
                 map.set(dateSE, {
-                    total: item.properties.Total.number,
+                    total: item.total,
                     orders: [newOrder]
                 });
             } else {
                 const thatDay = map.get(dateSE);
                 if (!thatDay) continue;
-                const newTotal = thatDay.total + item.properties.Total.number;
+                const newTotal = thatDay.total + item.total;
                 thatDay.total = newTotal;
                 thatDay.orders.push(newOrder);
             }
         }
         return map;
-    }, [history, menu]);
+    }, [history, data?.menu]);
 
 
     return (
-        <div className="text-extreme p-4">
+        <div className="text-extreme p-4 mb-16">
             <Header title="History" />
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center gap-8">
                 {
                     historyLoading || menuLoading
                         ? <MenuSkeleton />

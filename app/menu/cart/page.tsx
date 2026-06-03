@@ -1,17 +1,16 @@
 'use client';
 
+import { getMenu } from "@/app/actions/menu";
+import { submitOrder } from "@/app/actions/order";
 import Header from "@/components/Header";
 import MenuItem from "@/components/MenuItem";
 import MenuSkeleton from "@/components/MenuSkeleton";
 import ViewMenuButton from "@/components/ViewMenuButton";
 import useConfirm from "@/hooks/useConfirm";
 import useSession from "@/hooks/useSession";
-import addHistory from "@/queries/addHistory";
-import getHistory from "@/queries/getHistory";
-import getMenu from "@/queries/getMenu";
-import CartType, { CART_KEY } from "@/types/Cart";
-import { HouseObj } from "@/types/Session";
-import verifySession from "@/utils/verifySession";
+import { CART_KEY, CartType } from "@/types/Cart";
+import { dateToString } from "@/utils/dateToString";
+import { isKitchenOpen, verifyOrder } from "@/utils/verifyOrder";
 import { TrashIcon } from "@phosphor-icons/react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -19,7 +18,18 @@ import { useEffect, useRef, useState } from "react";
 
 export default function CartPage() {
     const [cart, setCart] = useState<CartType | null>(null);
-    const [serveTime, setServeTime] = useState(new Date(new Date().getTime() + (60 * 60 * 1000)).toLocaleString("sv-SE").replace(" ", "T").slice(0, 16));
+    const [serveTime, setServeTime] = useState(() => {
+        const now = new Date();
+        const isOpen = isKitchenOpen(now);
+        if (isOpen) {
+            return dateToString(new Date(now.getTime() + (60 * 60 * 1000)));
+        } else {
+            const newServeTime = new Date();
+            newServeTime.setDate(now.getDate() + 1);
+            newServeTime.setHours(13, 0, 0, 0);
+            return dateToString(newServeTime);
+        }
+    });
 
     const { session } = useSession();
     const { ask, modal } = useConfirm();
@@ -49,19 +59,13 @@ export default function CartPage() {
         localStorage.setItem(CART_KEY, JSON.stringify(cart));
     }, [cart]);
 
-    const { data, isLoading, error } = useQuery({
+    const { data, isLoading } = useQuery({
         queryKey: ['menuData'],
         queryFn: getMenu
     });
 
-    queryClient.prefetchQuery({
-        queryKey: ['history'],
-        queryFn: () => getHistory(session?.sig)
-    });
-
-    const house = session?.house;
     const idInCart = Object.keys(cart ?? {});
-    const menu = data?.filter(item => idInCart.includes(item.id)) ?? [];
+    const menu = data?.menu?.filter(item => idInCart.includes(item.id)) ?? [];
 
     async function handleClearCart() {
         const ok = await ask("Are you sure you want to remove all items?", "delete");
@@ -83,101 +87,52 @@ export default function CartPage() {
         });
     }
 
+    const total = cart ? menu.reduce((acc, value) => {
+        return acc + (value.price * cart[value.id]);
+    }, 0) : 0;
+
     async function handleSubmit() {
-        //0. check if the cart is empty
-        if (!cart || Object.keys(cart).length < 1) {
-            ask("Your cart is current empty.", "warning");
-            return;
-        }
+        const isValidOrder = await verifyOrder(serveTime, session, cart);
 
-        //1. check if the session is valid
-        //- the signature is valid
-        //- today is not the after checkout date
-        if (!session?.checkout || !house || !session.sig) {
-            ask("Please ask for the QR code or URL from our staff.", "warning");
-            return;
-        }
-
-        const sessionIsValid = await verifySession(session);
-        if (!sessionIsValid || (new Date(session.checkout) < new Date())) {
-            console.error(sessionIsValid, (new Date(session.checkout) > new Date()));
-            ask("Please ask for the new QR code or URL from our staff.", "warning");
-            return;
-        }
-
-        //2. check if the order time is valid
-        //- is 1hr after present
-        //- is between 12:00 - 20:00
-        //- is before noon on the checkout date
-
-        if (new Date(serveTime) < new Date(new Date().getTime() + (50 * 1000 * 60))) { //50 mins from now
-            ask("The serve time has to be placed at least 1 hour from now.", "warning");
-            return;
-        }
-
-        const serveHr = new Date(serveTime).getHours();
-        if (serveHr < 12 || serveHr > 20) {
-            ask("You can only order between 12PM and 8PM", "warning");
-            return;
-        }
-
-        if (session.checkout === new Date(serveTime).toISOString().slice(0, 10)) {
-            ask("You cannot order on your checkout date.", "warning");
+        if (!(isValidOrder).passed) {
+            switch (isValidOrder.reason) {
+                case "empty-cart":
+                    ask("Your cart is currently empty.", "warning");
+                    break;
+                case "no-session":
+                    ask("Please ask our staff for the QR code or URL.", "warning");
+                    break;
+                case "old-session":
+                    ask("Please ask our staff for the new QR code or URL.", "warning");
+                    break;
+                case "less-than-hr":
+                    ask("The serve time has to be placed at least 1 hour from now.", "warning");
+                    break;
+                case "kitchen-closed":
+                    ask("You can only order between 12PM and 8PM", "warning");
+                    break;
+                case "check-out":
+                    ask("You cannot order on your checkout date.", "warning");
+                    break;
+            }
             return;
         }
 
         const ok = await ask("Submit the order now?", "confirm");
         if (!ok) return;
 
-        const total = menu.reduce((acc, value) => acc + (value.properties.Price.number * cart[value.id]), 0);
-
         try {
-            const historyRes = await addHistory({
-                house,
-                menu,
-                serveTime,
-                total,
-                sig: session.sig,
-                cart
-            });
+            await submitOrder(session!, cart!, serveTime, menu, total);
+            //if success: clear cart
+            setCart({});
 
-            try {
-                await fetch('/api/sendLine', {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        message: `บ้าน ${HouseObj[house].th}
-Serve: ${new Date(serveTime).toDateString()} (${new Date(serveTime).toTimeString().slice(0, 5)})
-======
-${menu.map(item => {
-                            const name = item.properties.Name.title.at(0)?.plain_text;
-                            return `${name} = ${cart[item.id]}`;
-                        }).join("\n")}
-Total: THB ${total.toLocaleString()}
+            //invalidate history cache
+            queryClient.invalidateQueries({ queryKey: ['history'] });
 
-Order Link:
-${historyRes.public_url}
-`
-                    })
-                });
-
-                //if success: clear cart
-                setCart({});
-
-                //invalidate history cache
-                queryClient.invalidateQueries({ queryKey: ['history'] });
-
-                //redirect to history page
-                router.push('/menu/history');
-                return;
-            } catch (error) {
-                console.error(error);
-            }
+            //redirect to history page
+            router.push('/menu/history');
         } catch (error) {
             console.error(error);
-            return;
         }
     }
 
@@ -185,25 +140,29 @@ ${historyRes.public_url}
         <div className="p-4 text-extreme relative min-h-dvh flex flex-col">
             <Header title="Confirm Cart" />
             {
-                !isLoading
-                    ? menu.length > 0
-                        ?
-                        <div className="flex flex-col flex-1">
+                isLoading
+                    ? <MenuSkeleton />
+                    : menu.length < 1
+                        ? <div className="flex-1 w-full flex flex-col items-center justify-center gap-8">
+                            <img src="/svg/undraw_breakfast_rgx5.svg" alt="breakfast artwork" className="w-48" />
+                            <h1 className="text-center max-w-xs">Looks like there&lsquo;s nothing in your cart.</h1>
+                            <ViewMenuButton />
+                        </div>
+                        : <div className="flex flex-col flex-1">
                             <div className="space-y-4 mb-60">
                                 {
                                     menu.map((item) => {
-                                        const price = item.properties.Price.number;
                                         return (
                                             <div key={item.id} className="relative flex justify-between bg-foreground rounded-lg border border-border p-4">
                                                 <MenuItem
                                                     cart={cart ?? {}}
-                                                    dishName={item.properties.Name.title.at(0)?.plain_text}
+                                                    dishName={item.name}
                                                     id={item.id}
                                                     idInCart={idInCart}
-                                                    price={price}
+                                                    price={item.price}
                                                     setCart={setCart}
-                                                    english={item.properties.Description.rich_text.at(0)?.plain_text}
-                                                    imageUrl={item.properties.Image.files.at(0)?.file.url}
+                                                    english={item.description}
+                                                    imageUrl={item.image}
                                                 />
                                                 <button onClick={() => handleClearItem(item.id)} type="button" className="mb-auto">
                                                     <TrashIcon className="text-muted" weight="fill" size={24} />
@@ -222,7 +181,7 @@ ${historyRes.public_url}
                                 <div className="flex justify-between items-center gap-4 max-w-xs w-full">
                                     <p className="text-muted">Total</p>
                                     <div className="border-border border flex-1 h-0" />
-                                    <p className="text-muted">THB <span className="text-extreme text-xl font-bold">{menu.reduce((acc, val) => acc + (val.properties.Price.number * (cart ?? {})[val.id]), 0).toLocaleString()}</span></p>
+                                    <p className="text-muted">THB <span className="text-extreme text-xl font-bold">{total.toLocaleString()}</span></p>
                                 </div>
                                 <div className="flex items-center w-full gap-4">
                                     <button onClick={handleClearCart} type="button" className="text-muted ml-auto bg-border px-2 py-0.5 rounded-md font-semibold flex items-center gap-1">
@@ -233,12 +192,6 @@ ${historyRes.public_url}
                                 </div>
                             </div>
                         </div>
-                        : <div className="flex-1 w-full flex flex-col items-center justify-center gap-8">
-                            <img src="/svg/undraw_breakfast_rgx5.svg" alt="breakfast artwork" className="w-48" />
-                            <h1 className="text-center max-w-xs">Looks like there&lsquo;s nothing in your cart.</h1>
-                            <ViewMenuButton />
-                        </div>
-                    : <MenuSkeleton />
             }
             {modal}
         </div>

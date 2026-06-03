@@ -10,16 +10,18 @@ interface SessionContextType {
 
 const SESSION_KEY = "session";
 
-export const SessionContext = createContext<SessionContextType>({ session: { house: null, checkout: "", sig: "" }, setSession: () => { } });
+const DEFAULT_SESSION = { house: null, checkout: "", sig: "" };
+
+export const SessionContext = createContext<SessionContextType>({ session: DEFAULT_SESSION, setSession: () => { } });
 
 export default function SessionProvider({ children }: { children: ReactNode; }) {
     const [session, setSessionState] = useState<SessionType>(() => {
         try {
             const raw = localStorage.getItem(SESSION_KEY);
-            if (!raw) return null;
+            if (!raw) return DEFAULT_SESSION;
             return JSON.parse(raw);
         } catch {
-            //
+            return DEFAULT_SESSION;
         }
     });
 

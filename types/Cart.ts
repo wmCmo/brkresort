@@ -1,5 +1,5 @@
 export const CART_KEY = 'cart';
 
-export default interface CartType {
+export type CartType = {
     [id: string]: number;
-}
+};

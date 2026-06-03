@@ -1,5 +1,5 @@
-import CartType from "@/types/Cart";
-import { MenuType } from "@/types/notion";
+import { MenuType } from "@/app/actions/menu";
+import { CartType } from "@/types/Cart";
 
 export type HistoryPayLoadType = {
     house: string,
