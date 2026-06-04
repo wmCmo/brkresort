@@ -6,6 +6,7 @@ import QueryProvider from "@/providers/QueryProvider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import MobileNav from "@/components/MobileNav";
 import SessionProvider from "@/providers/SessionProvider";
+import Nav from "@/components/Nav";
 
 const montserrat = Montserrat({
   subsets: ['latin'],
@@ -45,8 +46,9 @@ export default function RootLayout({
         <SessionProvider>
           <QueryProvider>
             <body className="min-h-full flex flex-col">
+              <Nav />
               {children}
-              {process.env.NODE_ENV === "development" && <ReactQueryDevtools />}
+              {/* {process.env.NODE_ENV === "development" && <ReactQueryDevtools />} */}
               <MobileNav />
             </body>
           </QueryProvider>

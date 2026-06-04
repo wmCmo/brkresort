@@ -21,6 +21,30 @@ const nextConfig: NextConfig = {
         hostname: "avatars.githubusercontent.com",
         port: "",
         pathname: "/**"
+      },
+      {
+        protocol: "https",
+        hostname: "image.makewebcdn.com",
+        port: "",
+        pathname: "/**"
+      },
+      {
+        protocol: "https",
+        hostname: "1drv.ms",
+        port: "",
+        pathname: "/**"
+      },
+      {
+        protocol: "https",
+        hostname: "canadacentral1-mediap.svc.ms",
+        port: "",
+        pathname: "/**"
+      },
+      {
+        protocol: "https",
+        hostname: "w9bzpeofpetbsuv8.public.blob.vercel-storage.com",
+        port: "",
+        pathname: "/**"
       }
     ]
   }
