@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 export default function MobileNav() {
     const path = usePathname();
     return (
-        <div className={`${(path.startsWith('/menu') || path.startsWith('/settings')) ? 'flex' : 'hidden'} text-muted bg-foreground fixed bottom-0 left-0 justify-around items-center w-screen`}>
+        <div className={`${(path.startsWith('/menu') || path.startsWith('/settings')) ? 'flex' : 'hidden'} text-muted bg-foreground fixed bottom-0 left-0 justify-around items-center w-screen z-40`}>
             <IconContext.Provider value={{
                 weight: "fill",
                 size: 32,

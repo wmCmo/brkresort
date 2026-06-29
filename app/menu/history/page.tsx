@@ -2,9 +2,9 @@
 
 import { getHistory } from "@/app/actions/history";
 import { getMenu } from "@/app/actions/menu";
+import CallToActionButton from "@/components/CallToActionButton";
 import Header from "@/components/Header";
 import MenuSkeleton from "@/components/MenuSkeleton";
-import ViewMenuButton from "@/components/ViewMenuButton";
 import useSession from "@/hooks/useSession";
 import { CartType } from "@/types/Cart";
 import { skipToken, useQuery } from "@tanstack/react-query";
@@ -99,7 +99,7 @@ export default function HistoryPage() {
                             ? <div className="flex flex-col items-center gap-4 my-auto max-w-sm mt-8">
                                 <img src="/svg/undraw_empty-cart.svg" alt="Empty cart illustration" className="w-auto h-auto" />
                                 <h1 className="text-2xl text-center">You haven't ordered anything</h1>
-                                <ViewMenuButton />
+                                <CallToActionButton href="/menu" text="View Menu" />
                             </div>
                             : Array.from(groupedByDay.entries()).map(([date, item]: [string, DisplayHistory]) => {
                                 return <div key={date} className="py-2 px-4 bg-foreground border border-border rounded-lg max-w-sm w-full">

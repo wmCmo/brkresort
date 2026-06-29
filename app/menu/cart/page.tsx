@@ -2,10 +2,10 @@
 
 import { getMenu } from "@/app/actions/menu";
 import { submitOrder } from "@/app/actions/order";
+import CallToActionButton from "@/components/CallToActionButton";
 import Header from "@/components/Header";
 import MenuItem from "@/components/MenuItem";
 import MenuSkeleton from "@/components/MenuSkeleton";
-import ViewMenuButton from "@/components/ViewMenuButton";
 import useConfirm from "@/hooks/useConfirm";
 import useSession from "@/hooks/useSession";
 import { CART_KEY, CartType } from "@/types/Cart";
@@ -146,7 +146,7 @@ export default function CartPage() {
                         ? <div className="flex-1 w-full flex flex-col items-center justify-center gap-8">
                             <img src="/svg/undraw_breakfast_rgx5.svg" alt="breakfast artwork" className="w-48" />
                             <h1 className="text-center max-w-xs">Looks like there&lsquo;s nothing in your cart.</h1>
-                            <ViewMenuButton />
+                            <CallToActionButton href="/menu" text="View Menu"/>
                         </div>
                         : <div className="flex flex-col flex-1">
                             <div className="space-y-4 mb-60">

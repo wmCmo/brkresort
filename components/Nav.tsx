@@ -19,7 +19,7 @@ export default function Nav() {
     }
 
     return (
-        <nav className={`${(pathName.startsWith('/menu') || pathName.startsWith('/settings')) ? 'hidden' : 'flex'} backdrop-blur-lg w-dvw absolute top-0 items-center justify-between px-4 py-2 text-accent`}>
+        <nav className={`${(pathName.startsWith('/menu') || pathName.startsWith('/settings')) ? 'hidden' : 'flex'} backdrop-blur-lg w-full top-0 items-center justify-between px-4 py-2 text-extreme fixed z-40`}>
             <Link href={'/'} className="flex items-center gap-2">
                 <img className="h-8 w-8" src="/ui/logo.svg" alt="Circle logo of BRK" />
                 <Suspense>
@@ -29,14 +29,14 @@ export default function Nav() {
             <button type="button" className="sm:hidden " onClick={() => setShowMenu(prev => !prev)}>
                 <ListIcon weight="bold" className="w-8 h-8" />
             </button>
-            <div className={`${showMenu ? 'fixed flex sm:static ' : 'hidden sm:flex'} py-8 sm:py-0 backdrop-blur-lg z-20 left-0 top-14 flex-col items-center w-full sm:w-fit sm:flex-row gap-4`}>
+            <div className={`${showMenu ? 'fixed flex sm:static rounded-b-2xl' : 'hidden sm:flex'} py-8 sm:py-0 bg-foreground sm:bg-transparent z-10 left-0 top-14 flex-col items-center w-full sm:w-fit sm:flex-row gap-4`}>
                 <div />
                 <LinkComp link="/" name="Home" />
                 <LinkComp link="/activities" name="Activities" />
                 <LinkComp link="/menu" name="Menu" />
-                <LinkComp link="/blog" name="Blog" />
+                <LinkComp link="/blogs" name="Blogs" />
                 <Link href={'/contact'} className={`hover:underline underline-offset-4 ${boldCurerntPath('/contact')}`}>Contact Us</Link>
-                <Link className="px-4 py-1 bg-white text-accent rounded-lg font-bold hover:translate-y-0.5 active:translate-y-1 animate-out" href={'https://book-directonline.com/properties/banraikhunyadirect'} target="_blank" rel="noopener noreferrer">Book Now</Link>
+                <Link className="px-4 py-1 bg-white text-neutral-800 border-2 border-neutral-100 rounded-lg font-bold hover:translate-y-0.5 active:translate-y-1 animate-out" href={'https://book-directonline.com/properties/banraikhunyadirect'} target="_blank" rel="noopener noreferrer">Book Now</Link>
             </div>
         </nav>
     );
