@@ -52,7 +52,7 @@ export default function HomePage() {
       <main className="h-dvh flex flex-col items-center justify-center text-extreme overflow-hidden">
         <Image className="object-cover object-left h-full w-full -z-10 absolute top-0 left-0" src={'https://w9bzpeofpetbsuv8.public.blob.vercel-storage.com/brk-hero-2'} width={2560} height={1440} alt="Tent view for hero" />
         <div className="relative mt-4 backdrop-blur-md rounded-xl p-6 -z-10 mb-4">
-          <h1 className="font-bold text-5xl text-center text-white">Baan Rai Khun Ya Resort</h1>
+          <h1 className="font-bold text-5xl text-center text-white font-alice">Baan Rai Khun Ya Resort</h1>
           <img className="absolute top-6 right-10" src="/svg/leaves.svg" alt="Minimal leaves illustration" />
           <p className="text-center mt-4 text-white text-xl ">บ้านพักตากอากาศไม้ริมน้ำสุดผ่อนคลาย</p>
         </div>
@@ -67,20 +67,20 @@ export default function HomePage() {
       </main>
       <section className="flex justify-center">
         <div className="flex flex-col items-center max-w-sm sm:max-w-none w-full">
-          <h2 className="text-center font-bold text-4xl text-accent mt-8">A Paradise for Your Vacation</h2>
+          <h2 className="text-center font-bold text-4xl text-accent mt-8 font-alice">A Paradise for Your Vacation</h2>
           <div className="flex lg:flex-row items-center flex-col gap-4 mt-4">
             <Image className="rounded-lg h-auto w-auto" src={'https://w9bzpeofpetbsuv8.public.blob.vercel-storage.com/brk-hero'} alt="River picture" width={400} height={200} />
             <div className="flex flex-col gap-4">
               <p className="text-center text-extreme sm:text-left sm:max-w-sm"><strong>บ้านพักไม้ 5 หลัง</strong>ที่อยู่อิสระจากกัน ท่ามกลางธรรมชาติของแม่น้ำแควน้อยและภูเขา ณ อ.ไทรโยค กาญจนบุรี สัมผัสถึงบรรยากาศ ชมพระอาทิตย์ขึ้นที่โค้งน้ำทุกหลังเรือนบ้านไม้ที่กลมกลืนกับสภาพธรรมชาติโดยรอบ มีพื้นที่ใช้สอย อุปกรณ์ครบครัน
                 พร้อมพื้นที่ในการเตรียมอาหาร สำหรับ BBQ และปาร์ตี้สังสรรค์ได้ แพริมน้ำเหมาะสำหรับการแช่น้ำและ
                 ได้เติมเต็มกับกลุ่มเพื่อนและครอบครัว</p>
-              <CallToActionButton href={bookUrl} text="Book Now" isNewPage className="border border-neutral-200 mx-auto sm:mx-0 sm:mr-auto" />
+              <CallToActionButton href={bookUrl} text="Book Now" isNewPage className="mx-auto sm:mx-0 sm:mr-auto" />
             </div>
           </div>
         </div>
       </section>
       <section className="flex mt-16 flex-col items-center">
-        <h1 className="font-bold text-4xl text-accent text-center">Go for a style that fits you</h1>
+        <h1 className="font-bold text-4xl text-accent text-center font-alice">A place that fits your style</h1>
         <div className="p-4 flex flex-col sm:grid grid-cols-3 gap-4">
           <HouseCard
             href='/houses/chor-muang'
@@ -127,7 +127,7 @@ export default function HomePage() {
         </div>
       </section>
       <section className="mt-8 text-accent">
-        <h1 className="font-bold text-4xl text-accent text-center">Meet Your Host</h1>
+        <h1 className="font-bold text-4xl text-accent text-center font-alice">Meet Your Host</h1>
         <div className="flex sm:flex-row flex-col gap-8 items-center text-accent mt-4 justify-center">
           <Image src={'https://w9bzpeofpetbsuv8.public.blob.vercel-storage.com/brk-host.jpg'} alt="BRK host" width={300} height={300} className="rounded-full" />
           <div className="border-l-4 border-border pl-4 max-w-md">
@@ -143,7 +143,7 @@ export default function HomePage() {
         </div>
       </section>
       <section className="mt-16 text-accent">
-        <h1 className="font-bold text-4xl text-accent text-center">What people are saying</h1>
+        <h1 className="font-bold text-4xl text-accent text-center font-alice">What people are saying</h1>
         <div className="mt-8 flex gap-8 flex-col lg:grid sm:grid-cols-2 items-center place-self-center">
           <YTComponent src="https://www.youtube.com/embed/zDkWNQRUK2o?si=MwQDGDKYzQvc9HTr" />
           <FeatureComponent
@@ -166,7 +166,7 @@ export default function HomePage() {
         </div>
       </section >
       <section className="mt-8">
-        <h1 className="font-bold text-4xl text-accent text-center">News & Blogs</h1>
+        <h1 className="font-bold text-4xl text-accent text-center font-alice">News & Blogs</h1>
         <BlogComp />
       </section>
     </div >

@@ -5,6 +5,7 @@
 @theme inline {
   --font-montserrat: 'Montserrat', sans-serif;
   --font-kanit: 'Kanit', sans-serif;
+  --font-alice: 'Alice', serif;
   --font-sans: var(--font-montserrat), var(--font-kanit), sans-serif;
 
   --color-background: var(--background);
