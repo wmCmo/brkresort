@@ -2,6 +2,17 @@ import CallToActionButton from "@/components/CallToActionButton";
 import { AirplaneTakeoffIcon, StorefrontIcon, TrainIcon } from "@phosphor-icons/react/dist/ssr";
 import { ReactNode } from "react";
 
+function HeaderWithLeaf({ children }: { children: ReactNode; }) {
+  return (
+    <div className="flex justify-center">
+      <h2 className="text-2xl relative mt-6 text-center font-bold">
+        {children}
+        <img src="/svg/leaves.svg" alt="Leaves illustration" className="absolute -top-3 -right-4" />
+      </h2>
+    </div>
+  );
+}
+
 function ActivityCard({
   title,
   isFree = false,
@@ -60,12 +71,7 @@ export default function ActivitiesPage() {
       <h1 className="text-5xl font-bold font-alice text-center">Activities</h1>
       <hr className="mt-4 border-border" />
       <section>
-        <div className="flex justify-center">
-          <h2 className="text-2xl relative mt-8 text-center font-bold">
-            Explore the Wild!
-            <img src="/svg/leaves.svg" alt="Leaves illustration" className="absolute -top-3 -right-4" />
-          </h2>
-        </div>
+        <HeaderWithLeaf>Explore the Wild!</HeaderWithLeaf>
         <div className="mt-4 flex flex-wrap justify-center gap-4">
           <ActivityCard
             title="Bicycle"
@@ -152,13 +158,8 @@ export default function ActivitiesPage() {
         </div>
       </section>
       <hr className="mt-8 border-border" />
-      <section className="mt-6">
-        <div className="flex justify-center">
-          <h2 className="text-2xl relative font-bold">
-            Best Plan for You!
-            <img src={'/svg/leaves.svg'} alt="Leaves illustration" className="absolute -top-2 -right-4" />
-          </h2>
-        </div>
+      <section className="">
+        <HeaderWithLeaf>Best Plan for You!</HeaderWithLeaf>
         <div className="mt-4 flex justify-center flex-wrap gap-4">
           <RouteCard
             title="Half-day Trip"
@@ -211,8 +212,8 @@ export default function ActivitiesPage() {
         </div>
       </section>
       <hr className="mt-8 border-border" />
-      <section className="mt-4">
-        <h2 className="text-2xl text-center">Commuting Services</h2>
+      <section className="">
+        <HeaderWithLeaf>Commuting Services</HeaderWithLeaf>
         <div className="mt-4 flex flex-wrap justify-center gap-4">
           <CommutingCard>
             <div className="rounded-2xl bg-background p-3">
